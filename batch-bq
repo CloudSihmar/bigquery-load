@@ -1,0 +1,6 @@
+bq load \
+--source_format=CSV \
+--skip_leading_rows=1 \
+--autodetect \
+techlanders-internal:demo_data.users \
+/home/sandy_2087/ibm-users.csv
