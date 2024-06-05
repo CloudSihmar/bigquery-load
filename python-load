@@ -1,0 +1,37 @@
+from google.cloud import bigquery
+
+def load_csv_to_bigquery(project_id, dataset_id, table_id, source_file):
+    # Initialize a BigQuery client
+    client = bigquery.Client(project=project_id)
+
+    # Define the table reference
+    table_ref = client.dataset(dataset_id).table(table_id)
+
+    # Define the job configuration
+    job_config = bigquery.LoadJobConfig(
+        source_format=bigquery.SourceFormat.CSV,
+        skip_leading_rows=1,  # Skip the header row
+        autodetect=True       # Automatically detect the schema
+    )
+
+    # Load the CSV file into the BigQuery table
+    with open(source_file, "rb") as source_file_obj:
+        load_job = client.load_table_from_file(
+            source_file_obj, 
+            table_ref, 
+            job_config=job_config
+        )
+
+    # Wait for the load job to complete
+    load_job.result()
+
+    print(f"Loaded {load_job.output_rows} rows into {dataset_id}:{table_id}.")
+
+# Replace with your project ID, dataset ID, table ID, and path to your CSV file
+project_id = 'techlanders-internal'
+dataset_id = 'demo_data'
+table_id = 'users'
+source_file = '/home/sandy_2087/ibm-users.csv'
+
+# Load the CSV data into BigQuery
+load_csv_to_bigquery(project_id, dataset_id, table_id, source_file)
