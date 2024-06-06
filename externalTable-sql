@@ -1,0 +1,5 @@
+CREATE EXTERNAL TABLE sandeepdataset.users
+OPTIONS (
+   format = 'CSV',
+   uris = ['gs://sandeep-bucket44/users.csv']
+);
