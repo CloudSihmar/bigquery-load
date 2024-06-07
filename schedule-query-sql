@@ -1,0 +1,18 @@
+DECLARE snapshot_name STRING;
+DECLARE expiration TIMESTAMP;
+DECLARE query STRING;
+
+SET expiration = TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 15 DAY);
+
+SET snapshot_name = CONCAT(
+    "backup.user_",
+    FORMAT_TIMESTAMP('%Y%m%d%H%M', CURRENT_TIMESTAMP())
+);
+
+SET query = CONCAT(
+    "CREATE SNAPSHOT TABLE `techlanders-internal.", snapshot_name, "` ",
+    "CLONE `techlanders-internal.demo_data.users` ",
+    "OPTIONS(expiration_timestamp = TIMESTAMP '", FORMAT_TIMESTAMP('%Y-%m-%d %H:%M:%S', expiration), "')"
+);
+
+EXECUTE IMMEDIATE query;
