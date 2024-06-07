@@ -1,0 +1,22 @@
+bq query \
+  --use_legacy_sql=false \
+  --display_name="daily snapshot of demo_dataset" \
+  --location="asia-south1" \
+  --schedule="every 24 hours" \
+  --project_id=techlanders-internal \
+'DECLARE snapshot_name STRING;
+DECLARE expiration TIMESTAMP;
+DECLARE query STRING;
+
+SET expiration = DATE_ADD(@run_time, INTERVAL 30 DAY);
+
+SET snapshot_name = CONCAT(
+  "backup.user_",
+  FORMAT_DATETIME("%Y%m%d", @run_date)
+);
+
+SET query = CONCAT(
+  "CREATE SNAPSHOT TABLE techlanders-internal.", snapshot_name, 
+  " CLONE techlanders-internal.demo_data.users OPTIONS(expiration_timestamp = TIMESTAMP \"", expiration, "\");");
+
+EXECUTE IMMEDIATE query;'
