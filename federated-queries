@@ -1,0 +1,93 @@
+# Create a database and table with some data
+CREATE DATABASE mydb;
+
+CREATE TABLE products (
+    product_id VARCHAR(10) PRIMARY KEY,
+    product_name VARCHAR(255) NOT NULL,
+    manufacturer VARCHAR(255) NOT NULL
+);
+
+
+INSERT INTO products (product_id, product_name, manufacturer)
+VALUES
+    ('PRD001', 'Product 1', 'Manufacturer A'),
+    ('PRD002', 'Product 2', 'Manufacturer B'),
+    ('PRD003', 'Product 3', 'Manufacturer C'),
+    ('PRD004', 'Product 4', 'Manufacturer D'),
+    ('PRD005', 'Product 5', 'Manufacturer E'),
+    ('PRD006', 'Product 6', 'Manufacturer F'),
+    ('PRD007', 'Product 7', 'Manufacturer G'),
+    ('PRD008', 'Product 8', 'Manufacturer H'),
+    ('PRD009', 'Product 9', 'Manufacturer I'),
+    ('PRD010', 'Product 10', 'Manufacturer J'),
+    ('PRD011', 'Product 11', 'Manufacturer K'),
+    ('PRD012', 'Product 12', 'Manufacturer L'),
+    ('PRD013', 'Product 13', 'Manufacturer M'),
+    ('PRD014', 'Product 14', 'Manufacturer N'),
+    ('PRD015', 'Product 15', 'Manufacturer O'),
+    ('PRD016', 'Product 16', 'Manufacturer P'),
+    ('PRD017', 'Product 17', 'Manufacturer Q'),
+    ('PRD018', 'Product 18', 'Manufacturer R'),
+    ('PRD019', 'Product 19', 'Manufacturer S'),
+    ('PRD020', 'Product 20', 'Manufacturer T'),
+    ('PRD021', 'Product 21', 'Manufacturer U'),
+    ('PRD022', 'Product 22', 'Manufacturer V'),
+    ('PRD023', 'Product 23', 'Manufacturer W'),
+    ('PRD024', 'Product 24', 'Manufacturer X'),
+    ('PRD025', 'Product 25', 'Manufacturer Y'),
+    ('PRD026', 'Product 26', 'Manufacturer Z'),
+    ('PRD027', 'Product 27', 'Manufacturer AA'),
+    ('PRD028', 'Product 28', 'Manufacturer BB'),
+    ('PRD029', 'Product 29', 'Manufacturer CC'),
+    ('PRD030', 'Product 30', 'Manufacturer DD'),
+    ('PRD031', 'Product 31', 'Manufacturer EE'),
+    ('PRD032', 'Product 32', 'Manufacturer FF'),
+    ('PRD033', 'Product 33', 'Manufacturer GG'),
+    ('PRD034', 'Product 34', 'Manufacturer HH'),
+    ('PRD035', 'Product 35', 'Manufacturer II'),
+    ('PRD036', 'Product 36', 'Manufacturer JJ'),
+    ('PRD037', 'Product 37', 'Manufacturer KK'),
+    ('PRD038', 'Product 38', 'Manufacturer LL'),
+    ('PRD039', 'Product 39', 'Manufacturer MM'),
+    ('PRD040', 'Product 40', 'Manufacturer NN'),
+    ('PRD041', 'Product 41', 'Manufacturer OO'),
+    ('PRD042', 'Product 42', 'Manufacturer PP'),
+    ('PRD043', 'Product 43', 'Manufacturer QQ'),
+    ('PRD044', 'Product 44', 'Manufacturer RR'),
+    ('PRD045', 'Product 45', 'Manufacturer SS'),
+    ('PRD046', 'Product 46', 'Manufacturer TT'),
+    ('PRD047', 'Product 47', 'Manufacturer UU'),
+    ('PRD048', 'Product 48', 'Manufacturer VV'),
+    ('PRD049', 'Product 49', 'Manufacturer WW'),
+    ('PRD050', 'Product 50', 'Manufacturer XX');
+
+
+# Access cloud SQL data via BigQuery
+select * from EXTERNAL_QUERY("projects/techlanders-internal/locations/asia-south1/connections/cloud_S1l_connect", "select * from mydatabase.products;");
+
+
+# Access bigquery table data
+SELECT
+  product_id,
+  quantity
+FROM
+  `techlanders-internal.new_data.product_sales`
+
+# Merge both the tables
+
+SELECT
+  bq.product_id,
+  bq.quantity,
+  mq.product_name,
+  mq.manufacturer
+FROM
+  `techlanders-internal.new_data.product_sales` AS bq
+JOIN
+  EXTERNAL_QUERY(
+    "projects/techlanders-internal/locations/asia-south1/connections/mysql_connect",
+    "SELECT product_id, product_name, manufacturer FROM mydb.products"
+  ) AS mq
+ON
+  bq.product_id = mq.product_id;
+
+
