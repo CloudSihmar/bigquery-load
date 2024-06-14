@@ -1,6 +1,8 @@
 # Create a database and table with some data
 CREATE DATABASE mydb;
 
+use mydb;
+
 CREATE TABLE products (
     product_id VARCHAR(10) PRIMARY KEY,
     product_name VARCHAR(255) NOT NULL,
@@ -63,8 +65,7 @@ VALUES
 
 
 # Access cloud SQL data via BigQuery
-select * from EXTERNAL_QUERY("projects/techlanders-internal/locations/asia-south1/connections/cloud_S1l_connect", "select * from mydatabase.products;");
-
+select * from EXTERNAL_QUERY("projects/techlanders-internal/locations/asia-south1/connections/mysql_connect", "select * from mydb.products;");
 
 # Access bigquery table data
 SELECT
